@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Globe, Search, ChevronDown, Check, Loader2 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const LANGUAGES = [
   { code: 'en', name: 'English', native: 'English' },
@@ -32,6 +33,7 @@ export default function LanguageSwitcher({ currentLang, onLanguageChange }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const dropdownRef = useRef(null);
+  const { i18n } = useTranslation();
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -59,6 +61,7 @@ export default function LanguageSwitcher({ currentLang, onLanguageChange }) {
     // Simulate translation delay
     setTimeout(() => {
       onLanguageChange(lang);
+      i18n.changeLanguage(lang.code);
       setIsLoading(false);
       setIsOpen(false);
       setSearchQuery('');

@@ -1,15 +1,18 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { 
   Menu, Camera, MapPin, BellRing, CheckCircle2, 
   Zap, EyeOff, Activity, ShieldCheck, User, Users
 } from 'lucide-react';
 import LanguageSwitcher from '../components/LanguageSwitcher';
+import villageCleaningImg from '../assets/real_village_cleaning.png';
 import '../index.css';
 
 export default function HomePage() {
   const [currentLang, setCurrentLang] = useState({ code: 'en', name: 'English', native: 'English' });
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const handleProtectedNavigation = (citizenRoute) => {
     const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
@@ -37,10 +40,10 @@ export default function HomePage() {
           </div>
           
           <nav className="hidden md:flex gap-8">
-            <a href="#" className="font-medium text-saffron transition-colors">Home</a>
-            <a href="#about" className="font-medium text-gray-500 hover:text-saffron transition-colors">About</a>
-            <a href="#track" className="font-medium text-gray-500 hover:text-saffron transition-colors">Track Complaint</a>
-            <a href="#contact" className="font-medium text-gray-500 hover:text-saffron transition-colors">Contact</a>
+            <a href="#" className="font-medium text-saffron transition-colors">{t('nav.home')}</a>
+            <a href="#about" className="font-medium text-gray-500 hover:text-saffron transition-colors">{t('nav.about')}</a>
+            <a href="#track" className="font-medium text-gray-500 hover:text-saffron transition-colors">{t('nav.track')}</a>
+            <a href="#contact" className="font-medium text-gray-500 hover:text-saffron transition-colors">{t('nav.contact')}</a>
           </nav>
           
           <div className="flex items-center gap-4">
@@ -49,10 +52,10 @@ export default function HomePage() {
               onLanguageChange={setCurrentLang} 
             />
             <Link to="/login" className="hidden md:inline-flex items-center justify-center font-medium px-6 py-3 border-2 border-saffron text-saffron rounded-lg hover:bg-saffron-light transition-colors">
-              Login
+              {t('nav.login')}
             </Link>
             <Link to="/signup" className="hidden md:inline-flex items-center justify-center font-medium px-6 py-3 bg-saffron text-white rounded-lg hover:bg-saffron-dark transition-colors">
-              Sign Up
+              {t('nav.signup')}
             </Link>
             <button className="md:hidden text-gray-900">
               <Menu size={28} />
@@ -66,29 +69,29 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <div className="max-w-2xl mx-auto lg:mx-0 text-center lg:text-left">
             <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 leading-tight mb-6">
-              Empowering Villages, <span className="text-saffron">Connecting Communities</span>
+              {t('hero.title1')} <span className="text-saffron">{t('hero.title2')}</span>
             </h1>
             <p className="text-lg md:text-xl text-gray-600 mb-8">
-              Report local issues like garbage dumps, broken roads, or water supply problems directly to your Gram Panchayat in just one click.
+              {t('hero.subtitle')}
             </p>
             <div className="flex flex-wrap gap-4 justify-center lg:justify-start">
               <button 
                 onClick={() => handleProtectedNavigation('/complaint/new')}
                 className="inline-flex items-center justify-center font-medium px-6 py-3 bg-saffron text-white rounded-lg hover:bg-saffron-dark transition-colors text-lg"
               >
-                File a New Complaint
+                {t('hero.btn_file')}
               </button>
               <button 
                 onClick={() => handleProtectedNavigation('/dashboard/citizen/complaints')}
                 className="inline-flex items-center justify-center font-medium px-6 py-3 border-2 border-saffron text-saffron rounded-lg hover:bg-saffron-light transition-colors text-lg"
               >
-                Track Status
+                {t('hero.btn_track')}
               </button>
             </div>
           </div>
-          <div className="relative rounded-2xl overflow-hidden shadow-2xl">
+          <div className="relative rounded-2xl overflow-hidden shadow-2xl max-w-md mx-auto lg:ml-auto">
             <img 
-              src="https://images.unsplash.com/photo-1542385011-37d4f9bfdf6f?q=80&w=1470&auto=format&fit=crop" 
+              src={villageCleaningImg}
               alt="Clean Indian Village" 
               className="w-full h-auto block"
             />
@@ -99,9 +102,9 @@ export default function HomePage() {
       {/* 3. How It Works (Features Section) */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-6">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-4 text-gray-900">How It Works</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-4 text-gray-900">{t('howItWorks.title')}</h2>
           <p className="text-center text-gray-600 max-w-2xl mx-auto mb-12 text-lg">
-            A simple and transparent process to get your civic issues resolved quickly by the local authorities.
+            {t('howItWorks.subtitle')}
           </p>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 relative">
@@ -110,8 +113,8 @@ export default function HomePage() {
                 <Camera size={32} />
               </div>
               <div className="absolute -top-3 -right-3 w-8 h-8 bg-saffron text-white rounded-full flex items-center justify-center font-bold border-4 border-off-white group-hover:border-white transition-colors">1</div>
-              <h3 className="text-xl font-semibold mb-3 text-gray-900">Spot the Issue</h3>
-              <p className="text-gray-500 text-sm">See garbage or a civic problem? Take a photo with your mobile phone.</p>
+              <h3 className="text-xl font-semibold mb-3 text-gray-900">{t('howItWorks.step1_title')}</h3>
+              <p className="text-gray-500 text-sm">{t('howItWorks.step1_desc')}</p>
             </div>
             
             <div className="text-center p-6 bg-off-white rounded-2xl transition-all hover:-translate-y-1 hover:shadow-lg hover:bg-white relative z-10 group">
@@ -119,8 +122,8 @@ export default function HomePage() {
                 <MapPin size={32} />
               </div>
               <div className="absolute -top-3 -right-3 w-8 h-8 bg-saffron text-white rounded-full flex items-center justify-center font-bold border-4 border-off-white group-hover:border-white transition-colors">2</div>
-              <h3 className="text-xl font-semibold mb-3 text-gray-900">Report</h3>
-              <p className="text-gray-500 text-sm">Upload the photo, add your location, and submit the complaint securely.</p>
+              <h3 className="text-xl font-semibold mb-3 text-gray-900">{t('howItWorks.step2_title')}</h3>
+              <p className="text-gray-500 text-sm">{t('howItWorks.step2_desc')}</p>
             </div>
             
             <div className="text-center p-6 bg-off-white rounded-2xl transition-all hover:-translate-y-1 hover:shadow-lg hover:bg-white relative z-10 group">
@@ -128,8 +131,8 @@ export default function HomePage() {
                 <BellRing size={32} />
               </div>
               <div className="absolute -top-3 -right-3 w-8 h-8 bg-saffron text-white rounded-full flex items-center justify-center font-bold border-4 border-off-white group-hover:border-white transition-colors">3</div>
-              <h3 className="text-xl font-semibold mb-3 text-gray-900">Panchayat Notified</h3>
-              <p className="text-gray-500 text-sm">The local officials receive an instant alert about the reported issue.</p>
+              <h3 className="text-xl font-semibold mb-3 text-gray-900">{t('howItWorks.step3_title')}</h3>
+              <p className="text-gray-500 text-sm">{t('howItWorks.step3_desc')}</p>
             </div>
             
             <div className="text-center p-6 bg-off-white rounded-2xl transition-all hover:-translate-y-1 hover:shadow-lg hover:bg-white relative z-10 group">
@@ -137,8 +140,8 @@ export default function HomePage() {
                 <CheckCircle2 size={32} />
               </div>
               <div className="absolute -top-3 -right-3 w-8 h-8 bg-saffron text-white rounded-full flex items-center justify-center font-bold border-4 border-off-white group-hover:border-white transition-colors">4</div>
-              <h3 className="text-xl font-semibold mb-3 text-gray-900">Resolution</h3>
-              <p className="text-gray-500 text-sm">Track the progress in real-time until the Panchayat marks it as "Resolved".</p>
+              <h3 className="text-xl font-semibold mb-3 text-gray-900">{t('howItWorks.step4_title')}</h3>
+              <p className="text-gray-500 text-sm">{t('howItWorks.step4_desc')}</p>
             </div>
           </div>
         </div>
@@ -147,9 +150,9 @@ export default function HomePage() {
       {/* 4. Key Features / Details Section */}
       <section id="about" className="py-20 bg-off-white">
         <div className="max-w-7xl mx-auto px-6">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-4 text-gray-900">Why Use GramSeva?</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-4 text-gray-900">{t('features.title')}</h2>
           <p className="text-center text-gray-600 max-w-2xl mx-auto mb-12 text-lg">
-            Built specifically for rural citizens with simplicity and reliability in mind.
+            {t('features.subtitle')}
           </p>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -158,8 +161,8 @@ export default function HomePage() {
                 <Zap size={28} />
               </div>
               <div>
-                <h3 className="text-xl font-semibold mb-2 text-gray-900">Quick Resolution</h3>
-                <p className="text-gray-500">Direct line to Panchayat members ensures your voice is heard without bureaucratic delays.</p>
+                <h3 className="text-xl font-semibold mb-2 text-gray-900">{t('features.feat1_title')}</h3>
+                <p className="text-gray-500">{t('features.feat1_desc')}</p>
               </div>
             </div>
             
@@ -168,8 +171,8 @@ export default function HomePage() {
                 <Camera size={28} />
               </div>
               <div>
-                <h3 className="text-xl font-semibold mb-2 text-gray-900">Photo & GPS Support</h3>
-                <p className="text-gray-500">Attach live evidence with compressed images suitable for rural internet speeds.</p>
+                <h3 className="text-xl font-semibold mb-2 text-gray-900">{t('features.feat2_title')}</h3>
+                <p className="text-gray-500">{t('features.feat2_desc')}</p>
               </div>
             </div>
             
@@ -178,8 +181,8 @@ export default function HomePage() {
                 <Activity size={28} />
               </div>
               <div>
-                <h3 className="text-xl font-semibold mb-2 text-gray-900">Transparent Tracking</h3>
-                <p className="text-gray-500">Get SMS updates and see real-time progress on your complaint dashboard.</p>
+                <h3 className="text-xl font-semibold mb-2 text-gray-900">{t('features.feat3_title')}</h3>
+                <p className="text-gray-500">{t('features.feat3_desc')}</p>
               </div>
             </div>
             
@@ -188,8 +191,8 @@ export default function HomePage() {
                 <EyeOff size={28} />
               </div>
               <div>
-                <h3 className="text-xl font-semibold mb-2 text-gray-900">Anonymous Reporting</h3>
-                <p className="text-gray-500">Option to hide your identity for safety when reporting sensitive issues.</p>
+                <h3 className="text-xl font-semibold mb-2 text-gray-900">{t('features.feat4_title')}</h3>
+                <p className="text-gray-500">{t('features.feat4_desc')}</p>
               </div>
             </div>
           </div>
@@ -199,9 +202,9 @@ export default function HomePage() {
       {/* 5. Login / Portal Access Section */}
       <section id="track" className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-6">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-4 text-gray-900">Portal Access</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-4 text-gray-900">{t('portal.title')}</h2>
           <p className="text-center text-gray-600 max-w-2xl mx-auto mb-12 text-lg">
-            Simple OTP-based login tailored for our rural communities.
+            {t('portal.subtitle')}
           </p>
           
           <div className="grid grid-cols-1 gap-8 max-w-2xl mx-auto">
@@ -209,10 +212,10 @@ export default function HomePage() {
               <div className="mb-6 p-4 rounded-full bg-white shadow-sm text-saffron">
                 <User size={48} />
               </div>
-              <h3 className="text-2xl font-bold mb-4 text-gray-900">For Citizens</h3>
-              <p className="text-gray-600 mb-8 text-lg">Are you a resident? Login to track your complaints.</p>
+              <h3 className="text-2xl font-bold mb-4 text-gray-900">{t('portal.citizen_title')}</h3>
+              <p className="text-gray-600 mb-8 text-lg">{t('portal.citizen_desc')}</p>
               <Link to="/login" state={{ type: 'citizen' }} className="inline-flex items-center justify-center font-medium px-6 py-3 bg-saffron text-white rounded-lg hover:bg-saffron-dark transition-colors">
-                Citizen Login
+                {t('portal.citizen_btn')}
               </Link>
             </div>
             
@@ -220,10 +223,10 @@ export default function HomePage() {
               <div className="mb-6 p-4 rounded-full bg-white shadow-sm text-brand-blue">
                 <Users size={48} />
               </div>
-              <h3 className="text-2xl font-bold mb-4 text-gray-900">For Officials</h3>
-              <p className="text-gray-600 mb-8 text-lg">Are you a Panchayat Member? Login to manage and resolve issues.</p>
+              <h3 className="text-2xl font-bold mb-4 text-gray-900">{t('portal.official_title')}</h3>
+              <p className="text-gray-600 mb-8 text-lg">{t('portal.official_desc')}</p>
               <Link to="/login" state={{ type: 'official' }} className="inline-flex items-center justify-center font-medium px-6 py-3 bg-brand-blue text-white rounded-lg hover:bg-brand-blue-dark transition-colors">
-                Official Dashboard
+                {t('portal.official_btn')}
               </Link>
             </div>
           </div>

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
-  ShieldCheck, Home, FileText, PlusCircle, Settings, LogOut, Menu, X
+  ShieldCheck, Home, FileText, PlusCircle, Settings, LogOut, Menu, X, LayoutDashboard
 } from 'lucide-react';
 
 export default function CitizenLayout({ children, title }) {
@@ -16,7 +16,8 @@ export default function CitizenLayout({ children, title }) {
   };
 
   const navLinks = [
-    { name: 'Dashboard', path: '/dashboard/citizen', icon: Home },
+    { name: 'Home', path: '/', icon: Home },
+    { name: 'Dashboard', path: '/dashboard/citizen', icon: LayoutDashboard },
     { name: 'My Complaints', path: '/dashboard/citizen/complaints', icon: FileText },
     { name: 'File New Issue', path: '/complaint/new', icon: PlusCircle },
     { name: 'Settings', path: '/dashboard/citizen/settings', icon: Settings },

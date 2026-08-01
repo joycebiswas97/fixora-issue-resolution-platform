@@ -4,10 +4,14 @@ import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
 import CitizenDashboard from './pages/CitizenDashboard';
-import OfficialDashboard from './pages/OfficialDashboard';
-import NewComplaintPage from './pages/NewComplaintPage';
 import MyComplaintsPage from './pages/MyComplaintsPage';
+import OfficialLayout from './components/OfficialLayout';
+import OfficialDashboard from './pages/OfficialDashboard';
+import OfficialManageIssues from './pages/OfficialManageIssues';
+import OfficialCitizens from './pages/OfficialCitizens';
+import OfficialAnalytics from './pages/OfficialAnalytics';
 import SettingsPage from './pages/SettingsPage';
+import NewComplaintPage from './pages/NewComplaintPage';
 
 function App() {
   return (
@@ -19,7 +23,12 @@ function App() {
         <Route path="/dashboard/citizen" element={<CitizenDashboard />} />
         <Route path="/dashboard/citizen/complaints" element={<MyComplaintsPage />} />
         <Route path="/dashboard/citizen/settings" element={<SettingsPage />} />
-        <Route path="/dashboard/official" element={<OfficialDashboard />} />
+        {/* Official Dashboard Routes */}
+        <Route path="/dashboard/official" element={<OfficialLayout><OfficialDashboard /></OfficialLayout>} />
+        <Route path="/dashboard/official/issues" element={<OfficialLayout><OfficialManageIssues /></OfficialLayout>} />
+        <Route path="/dashboard/official/citizens" element={<OfficialLayout><OfficialCitizens /></OfficialLayout>} />
+        <Route path="/dashboard/official/analytics" element={<OfficialLayout><OfficialAnalytics /></OfficialLayout>} />
+        <Route path="/dashboard/official/settings" element={<OfficialLayout><SettingsPage userType="official" /></OfficialLayout>} />
         <Route path="/complaint/new" element={<NewComplaintPage />} />
       </Routes>
     </Router>
