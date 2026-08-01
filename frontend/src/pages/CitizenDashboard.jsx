@@ -1,23 +1,37 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
-  FileText, Clock, CheckCircle2, ChevronRight, MapPin 
+  FileText, Clock, CheckCircle2, ChevronRight, MapPin, AlertCircle 
 } from 'lucide-react';
 import CitizenLayout from '../components/CitizenLayout';
-
-const mockComplaints = [
-  { id: 'GRV-001', title: 'Broken Water Pipe', location: 'Main Street, Ward 4', date: '2023-10-24', status: 'Resolved' },
-  { id: 'GRV-002', title: 'Garbage Accumulation', location: 'Near Primary School', date: '2023-10-26', status: 'In Progress' },
-  { id: 'GRV-003', title: 'Street Light Not Working', location: 'Temple Road', date: '2023-10-27', status: 'Pending' }
-];
+import API from '../services/api';
 
 export default function CitizenDashboard() {
+  const [complaints, setComplaints] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
 
+  useEffect(() => {
+    fetchMyComplaints();
+  }, []);
+
+  const fetchMyComplaints = async () => {
+    try {
+      const response = await API.get('/complaints/me'); 
+      setComplaints(response.data.reverse());
+    } catch (err) {
+      console.error('Failed to fetch complaints', err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
   const getStatusColor = (status) => {
-    switch (status) {
-      case 'Resolved': return 'bg-green-100 text-green-800';
-      case 'In Progress': return 'bg-blue-100 text-blue-800';
-      case 'Pending': return 'bg-yellow-100 text-yellow-800';
-      default: return 'bg-gray-100 text-gray-800';
+    switch (status?.toLowerCase()) {
+      case 'resolved':
+        return <span className="flex items-center gap-1 text-sm font-bold text-green-600 bg-green-50 px-3 py-1 rounded-full"><CheckCircle2 size={14}/> Resolved</span>;
+      case 'in progress':
+        return <span className="flex items-center gap-1 text-sm font-bold text-blue-600 bg-blue-50 px-3 py-1 rounded-full"><Clock size={14}/> In Progress</span>;
+      default:
+        return <span className="flex items-center gap-1 text-sm font-bold text-yellow-600 bg-yellow-50 px-3 py-1 rounded-full"><AlertCircle size={14}/> Pending</span>;
     }
   };
 
@@ -25,7 +39,7 @@ export default function CitizenDashboard() {
     <CitizenLayout title="Citizen Dashboard">
       {/* Welcome Section */}
       <div className="mb-8">
-        <h2 className="text-2xl font-bold text-gray-900">Welcome back, Rahul!</h2>
+        <h2 className="text-2xl font-bold text-gray-900">Welcome back, {user.name || 'Citizen'}!</h2>
         <p className="text-gray-600 mt-1">Here's an overview of your reported issues.</p>
       </div>
 
@@ -38,7 +52,7 @@ export default function CitizenDashboard() {
             </div>
             <div>
               <p className="text-sm font-medium text-gray-500">Total Filed</p>
-              <p className="text-2xl font-bold text-gray-900">3</p>
+              <p className="text-2xl font-bold text-gray-900">{complaints.length}</p>
             </div>
           </div>
         </div>
@@ -50,7 +64,7 @@ export default function CitizenDashboard() {
             </div>
             <div>
               <p className="text-sm font-medium text-gray-500">Resolved</p>
-              <p className="text-2xl font-bold text-gray-900">1</p>
+              <p className="text-2xl font-bold text-gray-900">{complaints.filter(c => c.status === 'Resolved').length}</p>
             </div>
           </div>
         </div>
@@ -62,7 +76,7 @@ export default function CitizenDashboard() {
             </div>
             <div>
               <p className="text-sm font-medium text-gray-500">In Progress</p>
-              <p className="text-2xl font-bold text-gray-900">2</p>
+              <p className="text-2xl font-bold text-gray-900">{complaints.filter(c => c.status === 'In Progress').length}</p>
             </div>
           </div>
         </div>
@@ -75,26 +89,44 @@ export default function CitizenDashboard() {
           <a href="/dashboard/citizen/complaints" className="text-sm font-medium text-saffron hover:text-saffron-dark">View all</a>
         </div>
         <div className="divide-y divide-gray-100">
-          {mockComplaints.map((complaint) => (
-            <div key={complaint.id} className="p-6 hover:bg-gray-50 transition-colors flex flex-col sm:flex-row sm:items-center justify-between gap-4 cursor-pointer">
-              <div className="flex-1">
-                <div className="flex items-center gap-3 mb-1">
-                  <span className="text-sm font-medium text-gray-500">{complaint.id}</span>
-                  <span className={`px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(complaint.status)}`}>
-                    {complaint.status}
-                  </span>
+          {isLoading ? (
+          <div className="p-10 text-center text-gray-400 font-medium animate-pulse">Loading data...</div>
+          ) : complaints.length === 0 ? (
+            <div className="p-10 text-center text-gray-500 font-medium">No complaints filed yet.</div>
+          ) : (
+          <div className="grid gap-6">
+            {complaints.map((complaint) => (
+              <div key={complaint._id} className="p-6 hover:bg-gray-50 transition-colors flex flex-col sm:flex-row sm:items-center justify-between gap-4 cursor-pointer">
+                {/* ADDED Image Rendering */}
+                {complaint.imageUrl && (
+                  <div className="w-full sm:w-24 h-24 flex-shrink-0">
+                    <img 
+                      src={complaint.imageUrl} 
+                      alt={complaint.title} 
+                      className="w-full h-full object-cover rounded-lg border border-gray-200"
+                    />
+                  </div>
+                )}
+                <div className="flex-1">
+                  <div className="flex items-center gap-3 mb-1">
+                    <span className="text-sm font-medium text-gray-500">...{complaint._id.slice(-6).toUpperCase()}</span>
+                    <span className={`px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(complaint.status)}`}>
+                      {complaint.status}
+                    </span>
+                  </div>
+                  <h4 className="text-base font-semibold text-gray-900 mb-2">{complaint.title}</h4>
+                  <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500">
+                    <span className="flex items-center gap-1.5"><MapPin size={16} /> {complaint.address || 'Location not provided'}</span>
+                    <span className="flex items-center gap-1.5"><Clock size={16} /> {new Date(complaint.createdAt).toLocaleDateString()}</span>
+                  </div>
                 </div>
-                <h4 className="text-base font-semibold text-gray-900 mb-2">{complaint.title}</h4>
-                <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500">
-                  <span className="flex items-center gap-1.5"><MapPin size={16} /> {complaint.location}</span>
-                  <span className="flex items-center gap-1.5"><Clock size={16} /> {complaint.date}</span>
+                <div className="hidden sm:block text-gray-400">
+                  <ChevronRight size={20} />
                 </div>
               </div>
-              <div className="hidden sm:block text-gray-400">
-                <ChevronRight size={20} />
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
+        )}
         </div>
       </div>
     </CitizenLayout>

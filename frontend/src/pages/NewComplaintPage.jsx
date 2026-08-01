@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import API from '../services/api';
 import { 
   ArrowLeft, UploadCloud, MapPin, CheckCircle2, ShieldCheck,
   AlertCircle, FileText, Camera, Droplets, Zap, Trash2, HardHat, Info
@@ -7,8 +8,14 @@ import {
 
 export default function NewComplaintPage() {
   const navigate = useNavigate();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState('');
+  const [latitude, setLatitude] = useState(null);
+  const [longitude, setLongitude] = useState(null);
+  const [locationStatus, setLocationStatus] = useState('Auto Detect');
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isHoveringDrop, setIsHoveringDrop] = useState(false);
+  const [imageFile, setImageFile] = useState(null);
   
   const [formData, setFormData] = useState({
     title: '',
@@ -25,10 +32,76 @@ export default function NewComplaintPage() {
     { id: 'other', name: 'Other Issue', icon: AlertCircle, color: 'text-gray-500', bg: 'bg-gray-50' },
   ];
 
-  const handleSubmit = (e) => {
+  const handleGetLocation = () => {
+    setLocationStatus('Finding...');
+    if (!navigator.geolocation) {
+      setLocationStatus('Not Supported');
+    } else {
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const lat = position.coords.latitude;
+          const lon = position.coords.longitude;
+          
+          setLatitude(lat);
+          setLongitude(lon);
+          setLocationStatus('Located! ✓');
+
+          // --- NEW: Reverse Geocoding to translate GPS to text ---
+          try {
+            setLocationStatus('Translating...'); // Let user know we are fetching the address
+            const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`);
+            const data = await response.json();
+            
+            if (data && data.display_name) {
+              // Update the input field with the translated address
+              setFormData(prevData => ({ ...prevData, location: data.display_name }));
+              setLocationStatus('Located! ✓');
+            }
+          } catch (err) {
+            console.error("Could not fetch address text", err);
+            setLocationStatus('Located! (Address missing)');
+          }
+        },
+        () => setLocationStatus('Failed ❌')
+      );
+    }
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Submitting complaint:', formData);
-    setIsSubmitted(true);
+    setError('');
+
+    // 1. Validation
+    if (!formData.category) return setError('Please select a category.');
+    if (!latitude || !longitude) return setError('Please click Auto Detect to get GPS location.');
+
+    setIsSubmitting(true);
+
+    // 2. API Call
+    try {
+      // Create a FormData object to handle both text and physical files
+      const submitData = new FormData();
+      submitData.append('title', formData.title);
+      submitData.append('description', formData.description || '');
+      submitData.append('category', formData.category);
+      submitData.append('address', formData.location);
+      submitData.append('latitude', latitude);
+      submitData.append('longitude', longitude);
+      
+      // If they selected an image, append it to the FormData
+      if (imageFile) {
+        submitData.append('image', imageFile);
+      }
+
+      // Send as multipart/form-data
+      await API.post('/complaints', submitData);
+      
+      setIsSubmitted(true);
+    } catch (err) {
+      setError(err.response?.data?.message || 'Failed to submit complaint');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleBackToDashboard = () => {
@@ -106,6 +179,11 @@ export default function NewComplaintPage() {
           {/* Subtle gradient blob inside card */}
           <div className="absolute top-0 right-0 w-64 h-64 bg-saffron/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
           
+          {error && (
+            <div className="mb-8 p-4 bg-red-50 border border-red-200 rounded-2xl text-red-600 font-bold relative z-20">
+              {error}
+            </div>
+          )}
           <form onSubmit={handleSubmit} className="space-y-10 relative z-10">
             
             {/* Section 1: Basic Details */}
@@ -147,9 +225,9 @@ export default function NewComplaintPage() {
                       <button
                         key={cat.id}
                         type="button"
-                        onClick={() => setFormData({...formData, category: cat.id})}
+                        onClick={() => setFormData({...formData, category: cat.name})}
                         className={`flex flex-col items-center justify-center p-4 rounded-2xl border-2 transition-all ${
-                          formData.category === cat.id 
+                          formData.category === cat.name 
                             ? 'border-saffron bg-saffron/5 shadow-md shadow-saffron/10' 
                             : 'border-gray-100 bg-white hover:border-gray-200 hover:bg-gray-50'
                         }`}
@@ -157,7 +235,7 @@ export default function NewComplaintPage() {
                         <div className={`w-12 h-12 rounded-full ${cat.bg} ${cat.color} flex items-center justify-center mb-3`}>
                           <cat.icon size={24} />
                         </div>
-                        <span className={`text-sm font-bold ${formData.category === cat.id ? 'text-gray-900' : 'text-gray-600'}`}>
+                        <span className={`text-sm font-bold ${formData.category === cat.name ? 'text-gray-900' : 'text-gray-600'}`}>
                           {cat.name}
                         </span>
                       </button>
@@ -194,9 +272,9 @@ export default function NewComplaintPage() {
                       onChange={(e) => setFormData({...formData, location: e.target.value})}
                     />
                   </div>
-                  <button type="button" className="px-6 py-4 bg-gray-900 text-white rounded-2xl hover:bg-gray-800 transition-colors flex items-center justify-center font-bold shadow-lg shadow-gray-900/20 whitespace-nowrap">
+                  <button type="button" onClick={handleGetLocation} className="px-6 py-4 bg-gray-900 text-white rounded-2xl hover:bg-gray-800 transition-colors flex items-center justify-center font-bold shadow-lg shadow-gray-900/20 whitespace-nowrap">
                     <MapPin size={20} className="mr-2" />
-                    Auto Detect
+                    {locationStatus}
                   </button>
                 </div>
               </div>
@@ -222,8 +300,8 @@ export default function NewComplaintPage() {
                   </div>
                   <div className="text-center">
                     <label htmlFor="file-upload" className="relative cursor-pointer rounded-md font-extrabold text-xl text-gray-900 hover:text-saffron transition-colors focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-saffron">
-                      <span>Click to upload photo</span>
-                      <input id="file-upload" name="file-upload" type="file" className="sr-only" accept="image/*" capture="environment" />
+                      {imageFile ? imageFile.name : 'Click to upload photo'}
+                      <input id="file-upload" name="file-upload" type="file" className="sr-only" accept="image/*" capture="environment" onChange={(e) => setImageFile(e.target.files[0])}/>
                     </label>
                     <p className="mt-2 text-sm text-gray-500 font-medium">or drag and drop here</p>
                     <p className="mt-4 text-xs text-gray-400 font-medium bg-gray-200/50 inline-block px-3 py-1 rounded-full">PNG, JPG up to 10MB</p>
@@ -259,10 +337,13 @@ export default function NewComplaintPage() {
             <div className="pt-6">
               <button
                 type="submit"
-                className="w-full flex justify-center items-center gap-3 py-5 px-6 border border-transparent rounded-2xl shadow-2xl shadow-saffron/30 text-xl font-black text-white bg-gradient-to-r from-saffron to-[#f26513] hover:from-[#f26513] hover:to-[#e55a0f] transition-all hover:-translate-y-1 focus:outline-none focus:ring-4 focus:ring-saffron/50"
+                disabled={isSubmitting}
+                className={`w-full flex justify-center items-center gap-3 py-5 px-6 border border-transparent rounded-2xl shadow-2xl shadow-saffron/30 text-xl font-black text-white bg-gradient-to-r from-saffron to-[#f26513] transition-all focus:outline-none focus:ring-4 focus:ring-saffron/50 ${
+                  isSubmitting ? 'opacity-70 cursor-not-allowed' : 'hover:from-[#f26513] hover:to-[#e55a0f] hover:-translate-y-1'
+                }`}
               >
-                Submit Complaint Now
-                <ArrowLeft className="rotate-180" size={24} />
+                {isSubmitting ? 'Submitting...' : 'Submit Complaint Now'}
+                {!isSubmitting && <ArrowLeft className="rotate-180" size={24} />}
               </button>
             </div>
           </form>

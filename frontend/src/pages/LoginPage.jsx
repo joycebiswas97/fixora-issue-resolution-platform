@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import API from '../services/api';
 import { ShieldCheck, User, Users, ArrowLeft } from 'lucide-react';
 
 export default function LoginPage() {
@@ -8,18 +9,27 @@ export default function LoginPage() {
   const [loginType, setLoginType] = useState(location.state?.type || 'citizen');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
 
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
-    localStorage.setItem('isAuthenticated', 'true');
-    localStorage.setItem('userRole', loginType);
-    
-    if (loginType === 'citizen') {
-      navigate('/dashboard/citizen');
-    } else {
-      navigate('/dashboard/official');
+    setError('');
+    try{
+      const response = await API.post('/auth/login', { email, password });
+      localStorage.setItem('token', response.data.token);
+      localStorage.setItem('user', JSON.stringify(response.data.user));
+      if (response.data.user.role === 'Citizen') {
+        navigate('/dashboard/citizen');
+      } else {
+        navigate('/dashboard/official');
+      }
+    }
+    catch (err) {
+      // 3. Capture the error message sent from your backend
+      setError(err.response?.data?.message || 'Invalid email or password');
+      console.error("Login Error Details:", err.response);
     }
   };
 
@@ -71,7 +81,11 @@ export default function LoginPage() {
               Official
             </button>
           </div>
-
+          {error && (
+            <div className="mb-4 p-3 rounded-lg bg-red-50 border border-red-200 text-sm text-red-600 text-center">
+              {error}
+            </div>
+          )}
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700">

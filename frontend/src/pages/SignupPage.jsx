@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import API from '../services/api';
 import { ShieldCheck, User, Users, ArrowLeft } from 'lucide-react';
 
 export default function SignupPage() {
@@ -8,15 +9,42 @@ export default function SignupPage() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  
+  // 1. ADDED: State to handle and display errors
+  const [error, setError] = useState(''); 
 
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (signupType === 'citizen') {
-      navigate('/dashboard/citizen');
-    } else {
-      navigate('/dashboard/official');
+    setError(''); // Clear any previous errors
+
+    try {
+      // (Your backend User.js model expects 'Admin' for officials)
+      const userRole = signupType === 'official' ? 'Admin' : 'Citizen';
+
+      // Send the data to your backend
+      const response = await API.post('/auth/register', { 
+        name, 
+        email, 
+        password,
+        role: userRole 
+      });
+      
+      // Save the token and user data to localStorage
+      localStorage.setItem('token', response.data.token);
+      localStorage.setItem('user', JSON.stringify(response.data.user));
+
+      if (userRole === 'Admin') {
+        navigate('/dashboard/official');
+      } else {
+        navigate('/dashboard/citizen');
+      }
+      
+    } catch (err) {
+      // Capture and display the error message from the backend
+      setError(err.response?.data?.message || 'Failed to register account');
+      console.error("Signup Error Details:", err.response); // Helps you debug in browser console
     }
   };
 
@@ -68,7 +96,11 @@ export default function SignupPage() {
               Official
             </button>
           </div>
-
+          {error && (
+            <div className="mb-4 p-3 rounded-lg bg-red-50 border border-red-200 text-sm text-red-600 text-center">
+              {error}
+            </div>
+          )}
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
               <label htmlFor="name" className="block text-sm font-medium text-gray-700">

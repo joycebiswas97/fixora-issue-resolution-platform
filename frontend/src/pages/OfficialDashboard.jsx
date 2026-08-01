@@ -1,20 +1,46 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import API from '../services/api';
 import { 
   ShieldCheck, Home, FileText, Settings, LogOut,
   MapPin, Clock, AlertTriangle, Users, BarChart3, ChevronDown, Check, Menu, X, BellRing
 } from 'lucide-react';
 
-const mockComplaints = [
-  { id: 'GRV-004', type: 'Sanitation', title: 'Overflowing garbage bins', location: 'Market Area', date: '2023-10-31', status: 'Pending', reporter: 'Rajesh Kumar' },
-  { id: 'GRV-005', type: 'Infrastructure', title: 'Pothole on main link road', location: 'Link Road', date: '2023-10-30', status: 'In Progress', reporter: 'Sita Devi' },
-  { id: 'GRV-006', type: 'Water Supply', title: 'No water supply for 2 days', location: 'Ward 2', date: '2023-10-29', status: 'Resolved', reporter: 'Anonymous' },
-  { id: 'GRV-007', type: 'Electricity', title: 'Street light sparking', location: 'Near Panchayat Bhawan', date: '2023-10-28', status: 'Pending', reporter: 'Amit Patel' },
-];
-
 export default function OfficialDashboard() {
   const navigate = useNavigate();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  // 1. Add these new states and user data
+  const [complaints, setComplaints] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
+
+  // 2. Fetch data when the page loads
+  useEffect(() => {
+    fetchComplaints();
+  }, []);
+
+  const fetchComplaints = async () => {
+    try {
+      const response = await API.get('/complaints');
+      setComplaints(response.data.reverse()); // Put newest complaints on top
+    } catch (err) {
+      console.error('Error fetching complaints:', err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // 3. Handle updating the status
+  const handleStatusUpdate = async (id, newStatus) => {
+    try {
+      await API.put(`/complaints/${id}/status`, { status: newStatus });
+      // Instantly update the UI without reloading
+      setComplaints(complaints.map(c => c._id === id ? { ...c, status: newStatus } : c));
+    } catch (err) {
+      alert('Failed to update status');
+    }
+  };
 
   const getStatusBadge = (status) => {
     switch (status) {
@@ -28,6 +54,38 @@ export default function OfficialDashboard() {
   const handleLogout = () => {
     navigate('/');
   };
+
+  // Calculate Average Resolution Time
+  const avgResolutionTime = React.useMemo(() => {
+    // Only look at resolved complaints that have an updatedAt timestamp
+    const resolved = complaints.filter(c => c.status === 'Resolved' && c.updatedAt);
+    if (resolved.length === 0) return '0 Days';
+
+    const totalMs = resolved.reduce((acc, curr) => {
+      return acc + (new Date(curr.updatedAt) - new Date(curr.createdAt));
+    }, 0);
+
+    const days = (totalMs / (1000 * 60 * 60 * 24)).toFixed(1);
+    return days > 0 ? `${days} Days` : '< 1 Day';
+  }, [complaints]);
+
+  // Calculate 7-Day Trend (This week vs Last week)
+  const calculateTrend = (status = null) => {
+    const now = new Date();
+    const oneWeekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+    const twoWeeksAgo = new Date(now.getTime() - 14 * 24 * 60 * 60 * 1000);
+
+    const data = status ? complaints.filter(c => c.status === status) : complaints;
+
+    const thisWeek = data.filter(c => new Date(c.createdAt) >= oneWeekAgo).length;
+    const lastWeek = data.filter(c => new Date(c.createdAt) >= twoWeeksAgo && new Date(c.createdAt) < oneWeekAgo).length;
+
+    if (lastWeek === 0) return thisWeek > 0 ? 100 : 0;
+    return Math.round(((thisWeek - lastWeek) / lastWeek) * 100);
+  };
+
+  const totalTrend = calculateTrend();
+  const actionTrend = calculateTrend('Pending');
 
   return (
     <div className="min-h-screen bg-gray-50 flex font-inter">
@@ -53,11 +111,11 @@ export default function OfficialDashboard() {
           <div className="p-4">
             <div className="flex items-center gap-3 p-3 bg-[#15273B] rounded-xl mb-6">
               <div className="w-10 h-10 rounded-full bg-brand-blue flex items-center justify-center font-bold">
-                SP
+                {user.name?.charAt(0).toUpperCase() || 'O'}
               </div>
               <div>
-                <p className="font-semibold text-white text-sm">Suresh Patel</p>
-                <p className="text-xs text-gray-400">Panchayat Head</p>
+                <p className="font-semibold text-white text-sm">{user.name || 'Official'}</p>
+                <p className="text-xs text-gray-400">Official</p>
               </div>
             </div>
           </div>
@@ -122,12 +180,13 @@ export default function OfficialDashboard() {
                 <div className="p-2 bg-gray-50 rounded-lg">
                   <FileText className="text-gray-600" size={24} />
                 </div>
-                <span className="flex items-center text-sm font-medium text-green-600">
-                  +12% <ArrowUpIcon className="w-4 h-4 ml-0.5" />
+                <span className={`flex items-center text-sm font-medium ${totalTrend >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                  {totalTrend > 0 ? '+' : ''}{totalTrend}% 
+                  <ArrowUpIcon className={`w-4 h-4 ml-0.5 ${totalTrend < 0 ? 'rotate-180' : ''}`} />
                 </span>
               </div>
               <div>
-                <p className="text-2xl font-bold text-gray-900">142</p>
+                <p className="text-2xl font-bold text-gray-900">{complaints.length}</p>
                 <p className="text-sm font-medium text-gray-500">Total Received</p>
               </div>
             </div>
@@ -137,12 +196,13 @@ export default function OfficialDashboard() {
                 <div className="p-2 bg-red-50 rounded-lg">
                   <AlertTriangle className="text-red-600" size={24} />
                 </div>
-                <span className="flex items-center text-sm font-medium text-red-600">
-                  +4% <ArrowUpIcon className="w-4 h-4 ml-0.5" />
+                <span className={`flex items-center text-sm font-medium ${actionTrend >= 0 ? 'text-red-600' : 'text-green-600'}`}>
+                  {actionTrend > 0 ? '+' : ''}{actionTrend}% 
+                  <ArrowUpIcon className={`w-4 h-4 ml-0.5 ${actionTrend < 0 ? 'rotate-180' : ''}`} />
                 </span>
               </div>
               <div>
-                <p className="text-2xl font-bold text-gray-900">28</p>
+                <p className="text-2xl font-bold text-gray-900">{complaints.filter(c => c.status === 'Pending').length}</p>
                 <p className="text-sm font-medium text-gray-500">Action Required</p>
               </div>
             </div>
@@ -154,7 +214,7 @@ export default function OfficialDashboard() {
                 </div>
               </div>
               <div>
-                <p className="text-2xl font-bold text-gray-900">3.2 Days</p>
+                <p className="text-2xl font-bold text-gray-900">{avgResolutionTime}</p>
                 <p className="text-sm font-medium text-gray-500">Avg. Resolution Time</p>
               </div>
             </div>
@@ -166,7 +226,7 @@ export default function OfficialDashboard() {
                 </div>
               </div>
               <div>
-                <p className="text-2xl font-bold text-gray-900">96</p>
+                <p className="text-2xl font-bold text-gray-900">{complaints.filter(c => c.status === 'Resolved').length}</p>
                 <p className="text-sm font-medium text-gray-500">Total Resolved</p>
               </div>
             </div>
@@ -197,30 +257,39 @@ export default function OfficialDashboard() {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {mockComplaints.map((complaint) => (
-                    <tr key={complaint.id} className="hover:bg-gray-50 transition-colors">
+                  {isLoading ? (
+                    <tr><td colSpan="5" className="text-center py-10 text-gray-500">Loading complaints...</td></tr>
+                  ) : complaints.map((complaint) => (
+                    <tr key={complaint._id} className="hover:bg-gray-50 transition-colors">
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm font-medium text-gray-900">{complaint.id}</div>
-                        <div className="text-sm text-gray-500">{complaint.date}</div>
+                        <div className="text-sm font-medium text-gray-900">...{complaint._id.slice(-6).toUpperCase()}</div>
+                        <div className="text-sm text-gray-500">{new Date(complaint.createdAt).toLocaleDateString()}</div>
                       </td>
                       <td className="px-6 py-4">
                         <div className="text-sm font-medium text-gray-900">{complaint.title}</div>
                         <div className="text-sm text-gray-500 flex items-center gap-1 mt-0.5">
-                          <MapPin size={12} /> {complaint.location}
+                          <MapPin size={12} /> {complaint.address || 'Location not provided'}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-                          {complaint.type}
+                          {complaint.category}
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         {getStatusBadge(complaint.status)}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <button className="text-brand-blue hover:text-brand-blue-dark border border-brand-blue/20 bg-brand-blue/5 hover:bg-brand-blue/10 px-3 py-1.5 rounded-lg transition-colors">
-                          Update
-                        </button>
+                        {/* Replaced static button with a functional Select dropdown */}
+                        <select
+                          value={complaint.status}
+                          onChange={(e) => handleStatusUpdate(complaint._id, e.target.value)}
+                          className="text-sm border border-gray-300 rounded-lg px-2 py-1 outline-none cursor-pointer focus:ring-2 focus:ring-brand-blue"
+                        >
+                          <option value="Pending">Pending</option>
+                          <option value="In Progress">In Progress</option>
+                          <option value="Resolved">Resolved</option>
+                        </select>
                       </td>
                     </tr>
                   ))}

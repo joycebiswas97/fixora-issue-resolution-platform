@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate} from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
@@ -8,6 +8,17 @@ import OfficialDashboard from './pages/OfficialDashboard';
 import NewComplaintPage from './pages/NewComplaintPage';
 import MyComplaintsPage from './pages/MyComplaintsPage';
 import SettingsPage from './pages/SettingsPage';
+
+// Simple Protected Route wrapper
+const ProtectedRoute = ({ children, allowedRole }) => {
+  const token = localStorage.getItem('token');
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
+
+  if (!token) return <Navigate to="/login" replace />;
+  if (allowedRole && user.role !== allowedRole) return <Navigate to="/" replace />;
+
+  return children;
+};
 
 function App() {
   return (

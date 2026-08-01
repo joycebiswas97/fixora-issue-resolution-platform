@@ -8,6 +8,7 @@ export default function CitizenLayout({ children, title }) {
   const navigate = useNavigate();
   const location = useLocation();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
 
   const handleLogout = () => {
     localStorage.removeItem('isAuthenticated');
@@ -45,10 +46,10 @@ export default function CitizenLayout({ children, title }) {
           <div className="p-4">
             <div className="flex items-center gap-3 p-3 bg-saffron/10 dark:bg-saffron/20 rounded-xl mb-6">
               <div className="w-10 h-10 rounded-full bg-saffron text-white flex items-center justify-center font-bold">
-                RC
+                {user.name?.charAt(0).toUpperCase() || 'O'}
               </div>
               <div>
-                <p className="font-semibold text-gray-900 dark:text-white text-sm">Rahul Chauhan</p>
+                <p className="font-semibold text-gray-900 dark:text-white text-sm">{user.name || "Citizen"}</p>
                 <p className="text-xs text-gray-500 dark:text-gray-400">Citizen</p>
               </div>
             </div>
