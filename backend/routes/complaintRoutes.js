@@ -1,6 +1,7 @@
 const express = require('express');
 const { createComplaint, getComplaints, getMyComplaints, updateComplaintStatus } = require('../controllers/complaintController');
 const { protect, authorize } = require('../middlewares/authMiddleware');
+const upload = require('../config/cloudinary');
 
 const router = express.Router();
 
@@ -9,7 +10,7 @@ router.get('/', getComplaints);
 
 // Route: POST /api/complaints (Only logged-in users can create)
 // Notice how we drop the 'protect' middleware right in the middle!
-router.post('/', protect, createComplaint);
+router.post('/', protect, upload.single('image'), createComplaint);
 
 // Route: GET /api/complaints/me (Citizens checking their own history)
 router.get('/me', protect, getMyComplaints);

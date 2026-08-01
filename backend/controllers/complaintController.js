@@ -5,24 +5,25 @@ const Complaint = require('../models/complaint');
 // @access  Private (Citizens only)
 exports.createComplaint = async (req, res) => {
   try {
-    const { title, description, category, longitude, latitude, imageUrl } = req.body;
+    // 1. ADDED 'address' to the destructured req.body
+    const { title, description, category, address, longitude, latitude } = req.body;
 
-    // 1. Basic validation
-    if (!title || !description || !category || !longitude || !latitude) {
+    // 2. Added 'address' to the validation check
+    if (!title || !description || !category || !address || !longitude || !latitude) {
       return res.status(400).json({ message: 'Please provide all required fields' });
     }
 
-    // 2. Create the complaint in the database
+    const imageUrl = req.file ? req.file.path : 'https://via.placeholder.com/400x300?text=No+Image';
+
+    // 3. Create the complaint in the database
     const complaint = await Complaint.create({
       title,
-      description,
+      description: description || 'No additional details provided.',
       category,
-      location: {
-        type: 'Point',
-        coordinates: [longitude, latitude], // GeoJSON requires Longitude first
-      },
-      imageUrl, // This will be the Cloudinary URL sent from the frontend
-      reportedBy: req.user.id, // We get this from the authMiddleware
+      address,
+      location: { type: 'Point', coordinates: [longitude, latitude] },
+      imageUrl, // Saving the real Cloudinary URL!
+      reportedBy: req.user.id,
     });
 
     res.status(201).json({

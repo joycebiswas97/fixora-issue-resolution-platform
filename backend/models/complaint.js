@@ -13,7 +13,7 @@ const complaintSchema = new mongoose.Schema(
         },
         category: {
             type: String,
-            enum: ['Pothole', 'Garbage', 'Broken Streetlight', 'Water Leak', 'Other'],
+            enum: ['Water Supply', 'Electricity', 'Sanitation', 'Roads', 'Other Issue'],
             required: true
         },
         status: {
@@ -38,9 +38,13 @@ const complaintSchema = new mongoose.Schema(
             type: String, // We will store the Cloudinary URL string here later
             required: false
         },
+        address: {
+            type: String,
+            required: true
+        },
         reportedBy: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'User', // Links this complaint to the User model
+            ref: 'User',
             required: true
         },
     },
