@@ -14,6 +14,15 @@ export default function HomePage() {
   const navigate = useNavigate();
   const { t } = useTranslation();
 
+  const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
+  const userRole = localStorage.getItem('userRole');
+
+  const handleLogout = () => {
+    localStorage.removeItem('isAuthenticated');
+    localStorage.removeItem('userRole');
+    navigate('/');
+  };
+
   const handleProtectedNavigation = (citizenRoute) => {
     const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
     const userRole = localStorage.getItem('userRole');
@@ -25,7 +34,7 @@ export default function HomePage() {
         navigate('/dashboard/official');
       }
     } else {
-      navigate('/login');
+      navigate('/login', { state: { type: 'citizen' } });
     }
   };
 
@@ -51,12 +60,26 @@ export default function HomePage() {
               currentLang={currentLang} 
               onLanguageChange={setCurrentLang} 
             />
-            <Link to="/login" className="hidden md:inline-flex items-center justify-center font-medium px-6 py-3 border-2 border-saffron text-saffron rounded-lg hover:bg-saffron-light transition-colors">
-              {t('nav.login')}
-            </Link>
-            <Link to="/signup" className="hidden md:inline-flex items-center justify-center font-medium px-6 py-3 bg-saffron text-white rounded-lg hover:bg-saffron-dark transition-colors">
-              {t('nav.signup')}
-            </Link>
+            
+            {isAuthenticated ? (
+              <>
+                <Link to={userRole === 'citizen' ? '/dashboard/citizen' : '/dashboard/official'} className="hidden md:inline-flex items-center justify-center font-medium px-6 py-3 border-2 border-saffron text-saffron rounded-lg hover:bg-saffron-light transition-colors">
+                  Dashboard
+                </Link>
+                <button onClick={handleLogout} className="hidden md:inline-flex items-center justify-center font-medium px-6 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors">
+                  Logout
+                </button>
+              </>
+            ) : (
+              <>
+                <Link to="/login" className="hidden md:inline-flex items-center justify-center font-medium px-6 py-3 border-2 border-saffron text-saffron rounded-lg hover:bg-saffron-light transition-colors">
+                  {t('nav.login')}
+                </Link>
+                <Link to="/signup" className="hidden md:inline-flex items-center justify-center font-medium px-6 py-3 bg-saffron text-white rounded-lg hover:bg-saffron-dark transition-colors">
+                  {t('nav.signup')}
+                </Link>
+              </>
+            )}
             <button className="md:hidden text-gray-900">
               <Menu size={28} />
             </button>
