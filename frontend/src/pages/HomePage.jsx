@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { 
   Menu, Camera, MapPin, BellRing, CheckCircle2, 
   Zap, EyeOff, Activity, ShieldCheck, User, Users
@@ -9,6 +9,22 @@ import '../index.css';
 
 export default function HomePage() {
   const [currentLang, setCurrentLang] = useState({ code: 'en', name: 'English', native: 'English' });
+  const navigate = useNavigate();
+
+  const handleProtectedNavigation = (citizenRoute) => {
+    const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
+    const userRole = localStorage.getItem('userRole');
+
+    if (isAuthenticated) {
+      if (userRole === 'citizen') {
+        navigate(citizenRoute);
+      } else {
+        navigate('/dashboard/official');
+      }
+    } else {
+      navigate('/login');
+    }
+  };
 
   return (
     <>
@@ -56,10 +72,16 @@ export default function HomePage() {
               Report local issues like garbage dumps, broken roads, or water supply problems directly to your Gram Panchayat in just one click.
             </p>
             <div className="flex flex-wrap gap-4 justify-center lg:justify-start">
-              <button className="inline-flex items-center justify-center font-medium px-6 py-3 bg-saffron text-white rounded-lg hover:bg-saffron-dark transition-colors text-lg">
+              <button 
+                onClick={() => handleProtectedNavigation('/complaint/new')}
+                className="inline-flex items-center justify-center font-medium px-6 py-3 bg-saffron text-white rounded-lg hover:bg-saffron-dark transition-colors text-lg"
+              >
                 File a New Complaint
               </button>
-              <button className="inline-flex items-center justify-center font-medium px-6 py-3 border-2 border-saffron text-saffron rounded-lg hover:bg-saffron-light transition-colors text-lg">
+              <button 
+                onClick={() => handleProtectedNavigation('/dashboard/citizen/complaints')}
+                className="inline-flex items-center justify-center font-medium px-6 py-3 border-2 border-saffron text-saffron rounded-lg hover:bg-saffron-light transition-colors text-lg"
+              >
                 Track Status
               </button>
             </div>
@@ -232,8 +254,8 @@ export default function HomePage() {
               <ul className="space-y-3">
                 <li><a href="#" className="text-gray-400 hover:text-saffron transition-colors">Home</a></li>
                 <li><a href="#about" className="text-gray-400 hover:text-saffron transition-colors">About Us</a></li>
-                <li><a href="#track" className="text-gray-400 hover:text-saffron transition-colors">Track Status</a></li>
-                <li><a href="#" className="text-gray-400 hover:text-saffron transition-colors">File Complaint</a></li>
+                <li><button onClick={() => handleProtectedNavigation('/dashboard/citizen/complaints')} className="text-gray-400 hover:text-saffron transition-colors">Track Status</button></li>
+                <li><button onClick={() => handleProtectedNavigation('/complaint/new')} className="text-gray-400 hover:text-saffron transition-colors">File Complaint</button></li>
               </ul>
             </div>
             

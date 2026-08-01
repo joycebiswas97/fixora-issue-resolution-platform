@@ -13,6 +13,9 @@ export default function LoginPage() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    localStorage.setItem('isAuthenticated', 'true');
+    localStorage.setItem('userRole', loginType);
+    
     if (loginType === 'citizen') {
       navigate('/dashboard/citizen');
     } else {
