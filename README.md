@@ -1,32 +1,85 @@
 # 🌾 GramSeva: Rural Grievance Redressal System
 
-## 📖 Overview
-GramSeva is a web-based platform designed to bridge the gap between rural citizens and their local Panchayat. It empowers villagers to easily report civic issues—such as illegal garbage dumping, broken roads, or water supply disruptions—directly to local authorities. By digitizing the grievance process, GramSeva ensures transparency, faster resolution times, and cleaner communities.
+GramSeva is a MERN-stack web application designed to bridge the digital divide in rural communities. It enables village residents (citizens) to report local civic issues—such as water supply disruption, road damage, electricity failures, or sanitation concerns—directly to their local Gram Panchayat authorities. 
 
-## ✨ Key Features
-*   **User-Friendly Interface:** Highly accessible and mobile-responsive design tailored for rural users.
-*   **Direct Reporting:** Users can submit complaints with descriptions, live location (GPS), and photographic evidence.
-*   **Multilingual Support:** Interface can be toggled between English and local languages (e.g., Bengali, Hindi) for maximum accessibility.
-*   **Dual Dashboards:**
-    *   *Citizen Portal:* To track the real-time status of submitted complaints (Pending, In Progress, Resolved).
-    *   *Panchayat Portal:* A secure admin panel for officials to view, manage, assign workers, and update issue statuses.
-*   **OTP-Based Authentication:** Simplified mobile number login mechanism for users who may not have email addresses.
+By automating, geotagging, and monitoring complaints, GramSeva provides transparency, speed, and accountability to local governance.
+
+---
+
+## ✨ Key Features & Innovation
+
+### 👤 Citizen Portal
+- **Direct Reporting:** Submitting complaints with a title, description, category, and physical address alongside custom geographic coordinates.
+- **Evidence Upload:** Seamless image uploading using **Multer** and **Cloudinary** integration.
+- **Double Feeds Layout:** 
+  - *Community Feed (Overview):* A public timeline of all local issues raised in the Panchayat to prevent duplicate complaints and encourage transparency.
+  - *My Complaints:* A private, detailed dashboard to track individual complaints filed by the citizen.
+- **Status Tracker:** Real-time feedback badge showing `Pending` ➡️ `In Progress` ➡️ `Resolved`.
+
+### 🏢 Official Dashboard (Panchayat Panel)
+- **Interactive Issue Map:** Integrates **LeafletJS** & **OpenStreetMap** to plot all `Pending` and `In Progress` complaints as markers.
+- **Visual Analytics:** Interactive charts (using **Recharts**) visualizing issue counts across categories and resolution efficiency.
+- **Evidence Review:** Clickable lightbox viewer to view full-resolution uploaded images of complaints.
+- **Secure Registration:** Official registration requires a secret administrative key (`GramSeva_Admin_2026!`) to prevent unauthorized access.
+
+### 🌐 Global Multilingual Interface
+- Seamless multi-language toggling (English, Hindi, and Bengali) using **react-i18next** to ensure accessibility for non-English speaking citizens. Preferences are saved locally to persist across sessions.
+
+---
 
 ## 🛠️ Tech Stack
-*(Note: Update this section based on the specific tools you decide to use for the project)*
-*   **Frontend:** HTML5, CSS3, JavaScript (React.js / Next.js)
-*   **Backend:** Node.js / Express.js
-*   **Database:** MongoDB / PostgreSQL (for storing user details and complaints)
-*   **Authentication:** Firebase / JWT
 
-## 🚀 Getting Started
+- **Frontend:** React (Vite), Tailwind CSS, React-Leaflet, Recharts, Lucide React, react-i18next
+- **Backend:** Node.js, Express.js, JSON Web Tokens (JWT)
+- **Database:** MongoDB & Mongoose (with GeoJSON Point spatial indexing)
+- **File Storage:** Cloudinary
 
-### Prerequisites
-Make sure you have the following installed on your local machine:
-*   [Node.js](https://nodejs.org/) (v14 or higher)
-*   [Git](https://git-scm.com/)
+---
 
-### Installation
-1. Clone the repository:
+## 🚀 Quick Setup & Installation
+
+### 1. Configure the Backend
+1. Go to the backend folder:
    ```bash
-   git clone [https://github.com/your-username/GramSeva.git](https://github.com/your-username/GramSeva.git)
+   cd backend
+   ```
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Create a `.env` file in the `backend/` directory:
+   ```env
+   PORT=5000
+   MONGODB_URI=your_mongodb_connection_string
+   JWT_SECRET=your_jwt_secret_key
+   CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
+   CLOUDINARY_API_KEY=your_cloudinary_api_key
+   CLOUDINARY_API_SECRET=your_cloudinary_api_secret
+   OFFICIAL_SECRET_KEY=GramSeva_Admin_2026!
+   ```
+4. Start the backend developer server:
+   ```bash
+   npm run dev
+   ```
+
+### 2. Configure the Frontend
+1. Go to the frontend folder:
+   ```bash
+   cd gram-seva/frontend
+   ```
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Start the Vite React app:
+   ```bash
+   npm run dev
+   ```
+4. Open `http://localhost:5173` in your browser.
+
+---
+
+## 📞 Panchayat Helpline & Support
+
+For immediate assistance, villagers can reach out to the **Centralized Panchayat Helpline**:
+- 📞 **Helpline Number:** `1800-111-2222` (Toll-Free, 24/7 Support)
