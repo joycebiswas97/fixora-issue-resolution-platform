@@ -1,20 +1,27 @@
 const express = require('express');
-const { createComplaint, getComplaints, getMyComplaints, updateComplaintStatus } = require('../controllers/complaintController');
+const {
+  createComplaint,
+  getAllComplaints,
+  getMyComplaints,
+  updateComplaintStatus
+} = require('../controllers/complaintController');
 const { protect, authorize } = require('../middlewares/authMiddleware');
 const upload = require('../config/cloudinary');
 
 const router = express.Router();
 
-// Route: GET /api/complaints (Anyone can view complaints)
-router.get('/', getComplaints);
+// IMPORTANT: /me must come BEFORE /:id to avoid Express treating 'me' as an ID param
 
-// Route: POST /api/complaints (Only logged-in users can create)
-// Notice how we drop the 'protect' middleware right in the middle!
-router.post('/', protect, upload.single('image'), createComplaint);
-
-// Route: GET /api/complaints/me (Citizens checking their own history)
+// Route: GET /api/complaints/me  — user's own complaints (Private)
 router.get('/me', protect, getMyComplaints);
 
-// Route: PUT /api/complaints/:id/status (Admins updating tickets)
-router.put('/:id/status', protect, authorize('Admin'), updateComplaintStatus);
+// Route: GET /api/complaints     — community feed of all complaints (Private)
+router.get('/', protect, getAllComplaints);
+
+// Route: POST /api/complaints    — create a new complaint (Private)
+router.post('/', protect, upload.single('image'), createComplaint);
+
+// Route: PUT /api/complaints/:id/status — update status (Officials only)
+router.put('/:id/status', protect, authorize('official'), updateComplaintStatus);
+
 module.exports = router;

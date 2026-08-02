@@ -54,7 +54,7 @@ export default function LanguageSwitcher({ currentLang, onLanguageChange }) {
       setIsOpen(false);
       return;
     }
-    
+
     setIsLoading(true);
     // Simulate translation delay
     setTimeout(() => {
@@ -96,7 +96,7 @@ export default function LanguageSwitcher({ currentLang, onLanguageChange }) {
               />
             </div>
           </div>
-          
+
           <div className="max-h-[60vh] sm:max-h-96 overflow-y-auto overscroll-contain custom-scrollbar">
             {filteredLanguages.length === 0 ? (
               <div className="p-4 text-center text-sm text-gray-500">
@@ -108,11 +108,10 @@ export default function LanguageSwitcher({ currentLang, onLanguageChange }) {
                   <li key={lang.code}>
                     <button
                       onClick={() => handleSelect(lang)}
-                      className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm transition-colors ${
-                        currentLang.code === lang.code
+                      className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm transition-colors ${currentLang.code === lang.code
                           ? 'bg-saffron/10 text-saffron font-medium'
                           : 'text-gray-700 hover:bg-gray-50'
-                      }`}
+                        }`}
                     >
                       <div className="flex items-center gap-2">
                         <span>{lang.name}</span>

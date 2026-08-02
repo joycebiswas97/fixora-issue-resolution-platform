@@ -9,6 +9,9 @@ export default function SignupPage() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [officialKey, setOfficialKey] = useState('');
+  const [phone, setPhone] = useState('');
   
   // 1. ADDED: State to handle and display errors
   const [error, setError] = useState(''); 
@@ -19,23 +22,29 @@ export default function SignupPage() {
     e.preventDefault();
     setError(''); // Clear any previous errors
 
+    if (password !== confirmPassword) {
+      return setError('Passwords do not match!');
+    }
+
     try {
-      // (Your backend User.js model expects 'Admin' for officials)
-      const userRole = signupType === 'official' ? 'Admin' : 'Citizen';
+      // Backend User model expects 'official' or 'citizen'
+      const userRole = signupType === 'official' ? 'official' : 'citizen';
 
       // Send the data to your backend
       const response = await API.post('/auth/register', { 
         name, 
         email, 
         password,
-        role: userRole 
+        role: userRole,
+        officialKey: signupType === 'official' ? officialKey : undefined,
+        phone: phone 
       });
       
       // Save the token and user data to localStorage
       localStorage.setItem('token', response.data.token);
       localStorage.setItem('user', JSON.stringify(response.data.user));
 
-      if (userRole === 'Admin') {
+      if (userRole === 'official') {
         navigate('/dashboard/official');
       } else {
         navigate('/dashboard/citizen');
@@ -159,22 +168,62 @@ export default function SignupPage() {
               </div>
             </div>
 
+            {/* Confirm Password Field */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Confirm Password</label>
+              <input 
+                type="password" 
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                placeholder="Re-enter your password"
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+                required
+              />
+            </div>
+
+             {/* Optional Phone Number Field */}
+             <div>
+               <label className="block text-sm font-medium text-gray-700">
+                 Phone Number <span className="text-gray-400 font-normal">(Optional)</span>
+               </label>
+               <input 
+                 type="tel" 
+                 value={phone}
+                 onChange={(e) => setPhone(e.target.value)}
+                 placeholder="Enter 10-digit mobile number"
+                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+               />
+             </div>
+
             {signupType === 'official' && (
-              <div>
-                <label htmlFor="department" className="block text-sm font-medium text-gray-700">
-                  Department / Panchayat Name
-                </label>
-                <div className="mt-1">
-                  <input
-                    id="department"
-                    name="department"
-                    type="text"
+              <>
+                <div>
+                  <label htmlFor="department" className="block text-sm font-medium text-gray-700">
+                    Department / Panchayat Name
+                  </label>
+                  <div className="mt-1">
+                    <input
+                      id="department"
+                      name="department"
+                      type="text"
+                      required
+                      className="appearance-none block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-brand-blue focus:border-brand-blue sm:text-sm transition-colors"
+                      placeholder="E.g., Gram Panchayat Office"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">Official Authorization Key</label>
+                  <input 
+                    type="password" 
+                    value={officialKey}
+                    onChange={(e) => setOfficialKey(e.target.value)}
+                    placeholder="Enter the secret admin code"
+                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
                     required
-                    className="appearance-none block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-brand-blue focus:border-brand-blue sm:text-sm transition-colors"
-                    placeholder="E.g., Gram Panchayat Office"
                   />
                 </div>
-              </div>
+              </>
             )}
 
             <div>

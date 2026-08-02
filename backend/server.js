@@ -4,6 +4,7 @@ const cors = require('cors');
 require('dotenv').config();
 const authRoutes = require('./routes/authRoutes');
 const complaintRoutes = require('./routes/complaintRoutes');
+const userRoutes = require('./routes/userRoutes');
 
 const app = express();
 
@@ -19,6 +20,7 @@ mongoose.connect(process.env.MONGODB_URI)
 // --- API Routes ---
 app.use('/api/auth', authRoutes);
 app.use('/api/complaints', complaintRoutes);
+app.use('/api/users', userRoutes);
 // Basic Test Route
 app.get('/', (req, res) => {
   res.send('Municipal Grievance API is running...');

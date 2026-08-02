@@ -20,7 +20,7 @@ export default function LoginPage() {
       const response = await API.post('/auth/login', { email, password });
       localStorage.setItem('token', response.data.token);
       localStorage.setItem('user', JSON.stringify(response.data.user));
-      if (response.data.user.role === 'Citizen') {
+      if (response.data.user.role === 'citizen') {
         navigate('/dashboard/citizen');
       } else {
         navigate('/dashboard/official');
@@ -54,33 +54,7 @@ export default function LoginPage() {
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white py-8 px-4 shadow-xl sm:rounded-2xl sm:px-10 border border-gray-100">
-          
-          {/* Toggle Switch */}
-          <div className="flex flex-col p-1 bg-gray-100 rounded-xl mb-8 space-y-1">
-            <button
-              onClick={() => setLoginType('citizen')}
-              className={`flex-1 flex justify-center items-center gap-2 py-2.5 text-sm font-medium rounded-lg transition-all ${
-                loginType === 'citizen' 
-                  ? 'bg-white text-saffron shadow-sm ring-1 ring-black/5' 
-                  : 'text-gray-500 hover:text-gray-700'
-              }`}
-            >
-              <User size={18} />
-              Citizen
-            </button>
-            <button
-              onClick={() => setLoginType('official')}
-              className={`flex-1 flex justify-center items-center gap-2 py-2.5 text-sm font-medium rounded-lg transition-all ${
-                loginType === 'official' 
-                  ? 'bg-white text-brand-blue shadow-sm ring-1 ring-black/5' 
-                  : 'text-gray-500 hover:text-gray-700'
-              }`}
-            >
-              <Users size={18} />
-              Official
-            </button>
-          </div>
+        <div className="bg-white py-8 px-4 shadow-xl sm:rounded-2xl sm:px-10 border border-gray-100">          
           {error && (
             <div className="mb-4 p-3 rounded-lg bg-red-50 border border-red-200 text-sm text-red-600 text-center">
               {error}

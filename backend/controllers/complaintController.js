@@ -35,26 +35,27 @@ exports.createComplaint = async (req, res) => {
   }
 };
 
-// @desc    Get all complaints
+// @desc    Get ALL complaints (community feed)
 // @route   GET /api/complaints
-// @access  Public (or Private if you prefer)
-exports.getComplaints = async (req, res) => {
+// @access  Private (any logged-in user)
+exports.getAllComplaints = async (req, res) => {
   try {
-    // Fetch all complaints and also grab the user's name who reported it
-    const complaints = await Complaint.find().populate('reportedBy', 'name');
+    const complaints = await Complaint.find()
+      .populate('reportedBy', 'name')
+      .sort({ createdAt: -1 });
     res.status(200).json(complaints);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
 
-// @desc    Get logged-in user's complaints
+// @desc    Get logged-in user's own complaints
 // @route   GET /api/complaints/me
 // @access  Private
 exports.getMyComplaints = async (req, res) => {
   try {
-    // req.user.id comes from the protect middleware
-    const complaints = await Complaint.find({ reportedBy: req.user.id });
+    const complaints = await Complaint.find({ reportedBy: req.user.id })
+      .sort({ createdAt: -1 });
     res.status(200).json(complaints);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
