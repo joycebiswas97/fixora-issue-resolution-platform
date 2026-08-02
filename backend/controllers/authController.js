@@ -5,7 +5,21 @@ const jwt = require('jsonwebtoken');
 // @desc    Register a new user (Citizen or Admin)
 exports.register = async (req, res) => {
   try {
-    const { name, email, password, role } = req.body;
+    const { name, email, password, role, phone, officialKey } = req.body;
+
+    if (!name || !email || !password) {
+      return res.status(400).json({ message: 'Please provide all required fields' });
+    }
+
+    // 2. THE SECURITY CHECK
+    if (role === 'official') {
+      // If they didn't provide a key, or it doesn't match the .env file, kick them out
+      if (!officialKey || officialKey !== process.env.OFFICIAL_SECRET_KEY) {
+        return res.status(403).json({ 
+          message: 'Unauthorized: Invalid official registration key' 
+        });
+      }
+    }
 
     // 1. Check if user already exists
     const userExists = await User.findOne({ email });
@@ -22,9 +36,9 @@ exports.register = async (req, res) => {
       name,
       email,
       password: hashedPassword,
-      role: role || 'Citizen', // Defaults to Citizen if not provided
+      role: role === 'official' ? 'official' : 'citizen',
+      phone: phone || '' 
     });
-
     // 4. Generate JWT
     const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, {
       expiresIn: '7d',

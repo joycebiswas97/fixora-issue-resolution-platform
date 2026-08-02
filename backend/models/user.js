@@ -23,6 +23,11 @@ const userSchema = new mongoose.Schema(
             enum: ['Citizen', 'Admin'],
             default: 'Citizen'
         },
+        phone: {
+            type: String,
+            required: false,
+            default: ''
+        }
     },
     { timestamps: true } // Automatically adds createdAt and updatedAt fields
 );
