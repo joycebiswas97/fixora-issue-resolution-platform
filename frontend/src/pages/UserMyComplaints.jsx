@@ -64,7 +64,7 @@ function Lightbox({ complaint, onClose }) {
 const isPlaceholder = (url) => !url || url.includes('placeholder.com');
 
 // ── Main component ─────────────────────────────────────────────────────────────
-export default function CitizenMyComplaints() {
+export default function UserMyComplaints() {
   const [complaints, setComplaints] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
@@ -197,7 +197,7 @@ export default function CitizenMyComplaints() {
                   {complaint.status === 'Resolved' && (
                     <div className="mt-3 px-3 py-2 bg-emerald-50 border border-emerald-100 rounded-lg text-xs text-emerald-700 font-medium flex items-center gap-2">
                       <CheckCircle2 size={13} />
-                      This issue has been resolved by the Panchayat team.
+                      This issue has been resolved by the authority team.
                     </div>
                   )}
                   {complaint.status === 'In Progress' && (

@@ -76,7 +76,7 @@ export default function OfficialSettings() {
               <p className="font-semibold text-gray-900">{formData.name || 'Official'}</p>
               <p className="text-sm text-gray-500">{formData.email}</p>
               <span className="inline-block mt-1 text-xs font-medium bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">
-                Panchayat Official
+                Authority Official
               </span>
             </div>
           </div>

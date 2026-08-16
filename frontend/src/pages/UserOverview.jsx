@@ -65,7 +65,7 @@ const CATEGORY_COLORS = {
 };
 
 // ── Main component ─────────────────────────────────────────────────────────────
-export default function CitizenOverview() {
+export default function UserOverview() {
   const [complaints, setComplaints] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
@@ -107,7 +107,7 @@ export default function CitizenOverview() {
         <div>
           <h2 className="text-2xl font-bold text-gray-900">Community Issues</h2>
           <p className="text-gray-500 mt-1 text-sm flex items-center gap-1.5">
-            <Users size={14} /> {complaints.length} issues reported by citizens across the Panchayat
+            <Users size={14} /> {complaints.length} issues reported by users across the community
           </p>
         </div>
         {/* Stats strip */}

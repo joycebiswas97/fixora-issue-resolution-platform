@@ -76,14 +76,14 @@ const isPlaceholder = (url) => !url || url.includes('placeholder.com') || url ==
 
 // Tab sub-components (imported inline via lazy pattern for simplicity)
 import OfficialManageIssues from './OfficialManageIssues';
-import OfficialCitizens from './OfficialCitizens';
+import OfficialUsers from './OfficialUsers';
 import OfficialAnalytics from './OfficialAnalytics';
 import OfficialSettings from './OfficialSettings';
 
 const TABS = [
   { key: 'overview', label: 'Overview', icon: Home },
   { key: 'issues', label: 'Manage Issues', icon: FileText },
-  { key: 'citizens', label: 'Citizens', icon: Users },
+  { key: 'users', label: 'Users', icon: Users },
   { key: 'analytics', label: 'Analytics', icon: BarChart3 },
   { key: 'settings', label: 'Settings', icon: Settings },
 ];
@@ -171,7 +171,7 @@ export default function OfficialDashboard() {
     <>
       <div className="mb-8">
         <h2 className="text-2xl font-bold text-gray-900">Dashboard Overview</h2>
-        <p className="text-gray-600 mt-1">Monitor and manage civic issues across the Panchayat.</p>
+        <p className="text-gray-600 mt-1">Monitor and manage civic & facility issues across the organization.</p>
       </div>
 
       {/* Metrics Cards */}
@@ -308,7 +308,7 @@ export default function OfficialDashboard() {
     switch (activeTab) {
       case 'overview': return <OverviewContent />;
       case 'issues': return <OfficialManageIssues />;
-      case 'citizens': return <OfficialCitizens />;
+      case 'users': return <OfficialUsers />;
       case 'analytics': return <OfficialAnalytics />;
       case 'settings': return <OfficialSettings />;
       default: return <OverviewContent />;
@@ -331,7 +331,7 @@ export default function OfficialDashboard() {
         <div className="h-16 flex items-center px-6 border-b border-[#15273B] justify-between shrink-0">
           <Link to="/" className="flex items-center gap-2 text-2xl font-bold text-white hover:opacity-90">
             <ShieldCheck className="text-saffron" size={28} />
-            <span>GramSeva</span>
+            <span>Fixora</span>
           </Link>
           <button className="md:hidden text-gray-400 hover:text-white" onClick={() => setIsSidebarOpen(false)}>
             <X size={24} />
@@ -346,7 +346,7 @@ export default function OfficialDashboard() {
             </div>
             <div className="min-w-0">
               <p className="font-semibold text-white text-sm truncate">{user.name || 'Official'}</p>
-              <p className="text-xs text-gray-400">Panchayat Official</p>
+              <p className="text-xs text-gray-400">Authority Official</p>
             </div>
           </div>
         </div>

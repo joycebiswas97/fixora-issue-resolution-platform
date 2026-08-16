@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import API from '../services/api';
 import { Users, Phone, Mail, Calendar, Search } from 'lucide-react';
 
-export default function OfficialCitizens() {
+export default function OfficialUsers() {
   const [citizens, setCitizens] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');

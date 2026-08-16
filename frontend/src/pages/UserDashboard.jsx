@@ -3,15 +3,15 @@ import { Link, useNavigate } from 'react-router-dom';
 import {
   ShieldCheck, Home, FileText, PlusCircle, Settings, LogOut, Menu, X, Users
 } from 'lucide-react';
-import CitizenOverview from './CitizenOverview';
-import CitizenMyComplaints from './CitizenMyComplaints';
+import UserOverview from './UserOverview';
+import UserMyComplaints from './UserMyComplaints';
 
 const TABS = [
   { key: 'overview', label: 'Overview', icon: Home },
   { key: 'my-complaints', label: 'My Complaints', icon: FileText },
 ];
 
-export default function CitizenDashboard() {
+export default function UserDashboard() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('overview');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -30,9 +30,9 @@ export default function CitizenDashboard() {
 
   const renderContent = () => {
     switch (activeTab) {
-      case 'overview': return <CitizenOverview />;
-      case 'my-complaints': return <CitizenMyComplaints />;
-      default: return <CitizenOverview />;
+      case 'overview': return <UserOverview />;
+      case 'my-complaints': return <UserMyComplaints />;
+      default: return <UserOverview />;
     }
   };
 
@@ -49,7 +49,7 @@ export default function CitizenDashboard() {
         <div className="h-16 flex items-center px-6 border-b border-gray-200 justify-between shrink-0">
           <Link to="/" className="flex items-center gap-2 text-xl font-bold text-gray-900 hover:opacity-80 transition-opacity">
             <ShieldCheck className="text-saffron" size={26} />
-            <span>GramSeva</span>
+            <span>Fixora</span>
           </Link>
           <button className="md:hidden text-gray-500 hover:text-gray-900" onClick={() => setIsSidebarOpen(false)}>
             <X size={22} />

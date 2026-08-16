@@ -36,7 +36,7 @@ export default function CitizenLayout({ children, title }) {
           <div className="h-16 flex items-center px-6 border-b border-gray-200 dark:border-gray-700 justify-between">
             <Link to="/" className="flex items-center gap-2 text-2xl font-bold text-brand-green dark:text-green-400">
               <ShieldCheck className="text-saffron" size={28} />
-              <span>GramSeva</span>
+              <span>Fixora</span>
             </Link>
             <button className="md:hidden text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white" onClick={() => setIsSidebarOpen(false)}>
               <X size={24} />

@@ -63,7 +63,7 @@ export default function SignupPage() {
         <div className="flex justify-center">
           <Link to="/" className="flex items-center gap-2 text-3xl font-bold text-brand-green hover:opacity-90 transition-opacity">
             <ShieldCheck className="text-saffron" size={40} />
-            <span>GramSeva</span>
+            <span>Fixora</span>
           </Link>
         </div>
         <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
@@ -91,7 +91,7 @@ export default function SignupPage() {
               }`}
             >
               <User size={18} />
-              Citizen
+              User
             </button>
             <button
               onClick={() => setSignupType('official')}
@@ -199,7 +199,7 @@ export default function SignupPage() {
               <>
                 <div>
                   <label htmlFor="department" className="block text-sm font-medium text-gray-700">
-                    Department / Panchayat Name
+                    Department / Authority Name
                   </label>
                   <div className="mt-1">
                     <input
@@ -208,7 +208,7 @@ export default function SignupPage() {
                       type="text"
                       required
                       className="appearance-none block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-brand-blue focus:border-brand-blue sm:text-sm transition-colors"
-                      placeholder="E.g., Gram Panchayat Office"
+                      placeholder="E.g., Municipal Public Works Dept / Facility Management"
                     />
                   </div>
                 </div>

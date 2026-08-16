@@ -39,7 +39,7 @@ export default function LoginPage() {
         <div className="flex justify-center">
           <Link to="/" className="flex items-center gap-2 text-3xl font-bold text-brand-green hover:opacity-90 transition-opacity">
             <ShieldCheck className="text-saffron" size={40} />
-            <span>GramSeva</span>
+            <span>Fixora</span>
           </Link>
         </div>
         <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">

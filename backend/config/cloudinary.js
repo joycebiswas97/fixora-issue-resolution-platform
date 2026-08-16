@@ -12,7 +12,7 @@ cloudinary.config({
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
-    folder: 'gramseva_complaints',
+    folder: 'fixora_complaints',
     allowed_formats: ['jpg', 'jpeg', 'png']
   }
 });

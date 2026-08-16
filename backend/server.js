@@ -23,7 +23,7 @@ app.use('/api/complaints', complaintRoutes);
 app.use('/api/users', userRoutes);
 // Basic Test Route
 app.get('/', (req, res) => {
-  res.send('Municipal Grievance API is running...');
+  res.send('Fixora API is running...');
 });
 
 // Start Server

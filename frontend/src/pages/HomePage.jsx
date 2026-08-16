@@ -33,7 +33,7 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-6 flex justify-between items-center h-18">
           <div className="flex items-center gap-2 text-2xl font-bold text-brand-green">
             <ShieldCheck className="text-saffron" size={32} />
-            <span>GramSeva</span>
+            <span>Fixora</span>
           </div>
 
           <nav className="hidden md:flex gap-8">
@@ -66,10 +66,10 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <div className="max-w-2xl mx-auto lg:mx-0 text-center lg:text-left">
             <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 leading-tight mb-6">
-              Empowering Villages, <span className="text-saffron">Connecting Communities</span>
+              Empowering Communities, <span className="text-saffron">Resolving Issues</span>
             </h1>
             <p className="text-lg md:text-xl text-gray-600 mb-8">
-              Report local issues like garbage dumps, broken roads, or water supply problems directly to your Gram Panchayat in just one click.
+              Report local issues like road damage, water supply disruptions, or sanitation concerns directly to responsible authorities in just one click.
             </p>
             <div className="flex flex-wrap gap-4 justify-center lg:justify-start">
               <button
@@ -88,8 +88,8 @@ export default function HomePage() {
           </div>
           <div className="relative rounded-2xl overflow-hidden shadow-2xl">
             <img
-              src="/images/village.jpg"
-              alt="Clean Indian Village"
+              src="/images/hero.png"
+              alt="Community Infrastructure"
               className="w-full h-auto block"
             />
           </div>
@@ -110,11 +110,11 @@ export default function HomePage() {
             </div>
             <div>
               <div className="text-4xl font-extrabold text-saffron mb-2">15</div>
-              <div className="text-sm font-medium text-blue-100">Connected Villages</div>
+              <div className="text-sm font-medium text-blue-100">Connected Communities</div>
             </div>
             <div>
               <div className="text-4xl font-extrabold text-saffron mb-2">100%</div>
-              <div className="text-sm font-medium text-blue-100">Panchayat Transparency</div>
+              <div className="text-sm font-medium text-blue-100">Authority Transparency</div>
             </div>
           </div>
         </div>
@@ -152,8 +152,8 @@ export default function HomePage() {
                 <BellRing size={32} />
               </div>
               <div className="absolute -top-3 -right-3 w-8 h-8 bg-saffron text-white rounded-full flex items-center justify-center font-bold border-4 border-off-white group-hover:border-white transition-colors">3</div>
-              <h3 className="text-xl font-semibold mb-3 text-gray-900">Panchayat Notified</h3>
-              <p className="text-gray-500 text-sm">The local officials receive an instant alert about the reported issue.</p>
+              <h3 className="text-xl font-semibold mb-3 text-gray-900">Authority Notified</h3>
+              <p className="text-gray-500 text-sm">The responsible officials receive an instant alert about the reported issue.</p>
             </div>
 
             <div className="text-center p-6 bg-off-white rounded-2xl transition-all hover:-translate-y-1 hover:shadow-lg hover:bg-white relative z-10 group">
@@ -162,7 +162,7 @@ export default function HomePage() {
               </div>
               <div className="absolute -top-3 -right-3 w-8 h-8 bg-saffron text-white rounded-full flex items-center justify-center font-bold border-4 border-off-white group-hover:border-white transition-colors">4</div>
               <h3 className="text-xl font-semibold mb-3 text-gray-900">Resolution</h3>
-              <p className="text-gray-500 text-sm">Track the progress in real-time until the Panchayat marks it as "Resolved".</p>
+              <p className="text-gray-500 text-sm">Track the progress in real-time until the authority marks it as "Resolved".</p>
             </div>
           </div>
         </div>
@@ -171,9 +171,9 @@ export default function HomePage() {
       {/* 4. Key Features / Details Section */}
       <section id="about" className="py-20 bg-off-white">
         <div className="max-w-7xl mx-auto px-6">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-4 text-gray-900">Why Use GramSeva?</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-4 text-gray-900">Why Use Fixora?</h2>
           <p className="text-center text-gray-600 max-w-2xl mx-auto mb-12 text-lg">
-            Built specifically for rural citizens with simplicity and reliability in mind.
+            Built for citizens and organizations with simplicity and reliability in mind.
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -183,7 +183,7 @@ export default function HomePage() {
               </div>
               <div>
                 <h3 className="text-xl font-semibold mb-2 text-gray-900">Quick Resolution</h3>
-                <p className="text-gray-500">Direct line to Panchayat members ensures your voice is heard without bureaucratic delays.</p>
+                <p className="text-gray-500">Direct line to resolution teams ensures your voice is heard without bureaucratic delays.</p>
               </div>
             </div>
 
@@ -193,7 +193,7 @@ export default function HomePage() {
               </div>
               <div>
                 <h3 className="text-xl font-semibold mb-2 text-gray-900">Photo & GPS Support</h3>
-                <p className="text-gray-500">Attach live evidence with compressed images suitable for rural internet speeds.</p>
+                <p className="text-gray-500">Attach live evidence with compressed images suitable for all network speeds.</p>
               </div>
             </div>
 
@@ -225,7 +225,7 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-6">
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-4 text-gray-900">Portal Access</h2>
           <p className="text-center text-gray-600 max-w-2xl mx-auto mb-12 text-lg">
-            Simple OTP-based login tailored for our rural communities.
+            Seamless access for community members and management teams.
           </p>
 
           <div className="grid grid-cols-1 gap-8 max-w-2xl mx-auto">
@@ -233,10 +233,10 @@ export default function HomePage() {
               <div className="mb-6 p-4 rounded-full bg-white shadow-sm text-saffron">
                 <User size={48} />
               </div>
-              <h3 className="text-2xl font-bold mb-4 text-gray-900">For Citizens</h3>
-              <p className="text-gray-600 mb-8 text-lg">Are you a resident? Login to track your complaints.</p>
+              <h3 className="text-2xl font-bold mb-4 text-gray-900">User Portal</h3>
+              <p className="text-gray-600 mb-8 text-lg">Are you a resident or community user? Login to track your reported issues.</p>
               <Link to="/login" state={{ type: 'citizen' }} className="inline-flex items-center justify-center font-medium px-6 py-3 bg-saffron text-white rounded-lg hover:bg-saffron-dark transition-colors">
-                Citizen Login
+                User Login
               </Link>
             </div>
 
@@ -244,8 +244,8 @@ export default function HomePage() {
               <div className="mb-6 p-4 rounded-full bg-white shadow-sm text-brand-blue">
                 <Users size={48} />
               </div>
-              <h3 className="text-2xl font-bold mb-4 text-gray-900">For Officials</h3>
-              <p className="text-gray-600 mb-8 text-lg">Are you a Panchayat Member? Login to manage and resolve issues.</p>
+              <h3 className="text-2xl font-bold mb-4 text-gray-900">Authority Dashboard</h3>
+              <p className="text-gray-600 mb-8 text-lg">Are you an authority or department official? Login to manage and resolve issues.</p>
               <Link to="/login" state={{ type: 'official' }} className="inline-flex items-center justify-center font-medium px-6 py-3 bg-brand-blue text-white rounded-lg hover:bg-brand-blue-dark transition-colors">
                 Official Dashboard
               </Link>
@@ -261,10 +261,10 @@ export default function HomePage() {
             <div className="lg:col-span-2">
               <div className="flex items-center gap-2 text-2xl font-bold text-white mb-4">
                 <ShieldCheck size={28} />
-                <span>GramSeva</span>
+                <span>Fixora</span>
               </div>
               <p className="text-gray-400 mb-6 leading-relaxed">
-                Bridging the gap between rural citizens and the local Panchayat to resolve civic issues efficiently.
+                Bridging the gap between users and resolution authorities to resolve civic & facility issues efficiently.
               </p>
               <div className="flex gap-4">
                 <a href="#" className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-white hover:bg-saffron transition-colors">FB</a>
@@ -294,16 +294,16 @@ export default function HomePage() {
             </div>
 
             <div>
-              <h3 className="text-lg font-semibold text-white mb-6">Emergency Contact</h3>
+              <h3 className="text-lg font-semibold text-white mb-6">Support & Contact</h3>
               <div className="bg-[rgba(244,114,22,0.1)] border border-[rgba(244,114,22,0.2)] p-4 rounded-lg">
-                <h4 className="text-saffron text-sm mb-1">Panchayat Helpline</h4>
-                <p className="font-semibold text-lg text-white">1800-111-2222</p>
+                <h4 className="text-saffron text-sm mb-1">Platform Support</h4>
+                <p className="text-sm text-gray-300">Contact your organization or local authority administrator for escalation.</p>
               </div>
             </div>
           </div>
 
           <div className="pt-8 border-t border-gray-800 text-center text-gray-500 text-sm">
-            <p>&copy; {new Date().getFullYear()} GramSeva. All rights reserved.</p>
+            <p>&copy; {new Date().getFullYear()} Fixora. All rights reserved.</p>
           </div>
         </div>
       </footer>

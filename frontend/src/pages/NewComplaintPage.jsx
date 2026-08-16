@@ -120,7 +120,7 @@ export default function NewComplaintPage() {
           
           <h2 className="text-4xl font-extrabold text-gray-900 mb-4 tracking-tight">Success!</h2>
           <p className="text-gray-600 mb-8 text-lg leading-relaxed">
-            Your complaint has been securely submitted to the Gram Panchayat. You will receive an SMS with tracking details shortly.
+            Your issue report has been securely submitted to the designated authority. You will receive tracking details shortly.
           </p>
           
           <div className="bg-gray-50 rounded-2xl p-6 mb-8 text-left border border-gray-100">
@@ -157,7 +157,7 @@ export default function NewComplaintPage() {
           </button>
           <div className="flex items-center gap-2 text-2xl font-black text-brand-green tracking-tight">
             <ShieldCheck className="text-saffron drop-shadow-sm" size={32} />
-            <span className="hidden sm:inline">GramSeva</span>
+            <span className="hidden sm:inline">Fixora</span>
           </div>
         </div>
       </header>
@@ -170,7 +170,7 @@ export default function NewComplaintPage() {
           </span>
           <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 tracking-tight">File a Complaint</h1>
           <p className="mt-4 text-lg text-gray-500 max-w-xl mx-auto">
-            Help us improve our village. Fill out the details below and attach a photo for faster resolution.
+            Help us improve our community and facilities. Fill out the details below and attach a photo for faster resolution.
           </p>
         </div>
 
