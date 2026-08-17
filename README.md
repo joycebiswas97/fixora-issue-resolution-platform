@@ -106,6 +106,26 @@ Fixora's underlying issue-reporting workflow can be adapted for various environm
 ```
 
 ---
+## 🔐 Demo Credentials
+
+You can use the following demo account to explore the **Authority Dashboard** without creating an authority account.
+
+**Authority / Admin Demo**
+
+* **Email:** `rakesh@mail.com`
+* **Password:** `password`
+
+The demo account provides access to features such as:
+
+* 📊 Dashboard & analytics
+* 🗺️ Interactive issue map
+* 👥 Registered users
+* 📋 Complaint management
+* 🖼️ Evidence/image review
+* 🔄 Issue status tracking
+
+> **Note:** This is a public demo account intended for evaluation and testing. Please do not use it for sensitive information.
+---
 
 ## 🚀 Quick Setup & Installation
 
